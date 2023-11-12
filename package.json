@@ -1,0 +1,47 @@
+{
+    "name": "messenger-backend",
+    "license": "MIT",
+    "scripts": {
+        "compile": "tsc",
+        "compile:watch": "tsc --watch",
+        "start-server": "node build/index.js",
+        "start-server:watch": "nodemon build/index.js",
+        "lint": "eslint --ext .ts ."
+    },
+    "sideEffects": false,
+    "main": "src/index.ts",
+    "dependencies": {
+        "body-parser": "^1.20.2",
+        "chalk": "^4.1.2",
+        "cookie-parser": "^1.4.6",
+        "cors": "^2.8.5",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2",
+        "firebase-admin": "^11.11.0",
+        "module-alias": "^2.2.3",
+        "moment": "^2.29.4",
+        "path": "^0.12.7",
+        "typescript": "^5.2.2",
+        "ws": "^8.14.2",
+        "zod": "^3.22.4"
+    },
+    "devDependencies": {
+        "@types/cookie-parser": "^1.4.5",
+        "@types/cors": "^2.8.16",
+        "@types/express": "^4.17.20",
+        "@types/ws": "^8.5.9",
+        "@typescript-eslint/eslint-plugin": "^6.0.0",
+        "@typescript-eslint/parser": "^6.0.0",
+        "esbuild-loader": "^4.0.2",
+        "eslint": "^8.2.0",
+        "eslint-config-airbnb": "19.0.4",
+        "eslint-config-airbnb-typescript": "17.1.0",
+        "eslint-plugin-import": "^2.25.3",
+        "eslint-plugin-simple-import-sort": "^10.0.0",
+        "nodemon": "^3.0.1",
+        "prettier": "^3.0.3"
+    },
+    "_moduleAliases": {
+        "@shared": "build/shared"
+    }
+}
