@@ -33,7 +33,7 @@ const handler = async (dependencies: Dependencies, body: z.infer<typeof schema>)
         throw new HttpError(403, 'Username already taken');
     }
 
-    const token = randomBytes(64).toString('base64');
+    const token = randomBytes(64).toString('base64url');
 
     logger.info('Joining game...', { game, username, token });
 

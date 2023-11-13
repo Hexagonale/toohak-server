@@ -18,7 +18,7 @@ const handler = async (dependencies: Dependencies, body: z.infer<typeof schema>)
     const code = Math.round(Math.random() * 999_999)
         .toString()
         .padStart(6, '0');
-    const token = randomBytes(64).toString('base64');
+    const token = randomBytes(64).toString('base64url');
 
     logger.info('Creating game...', { code, token });
 

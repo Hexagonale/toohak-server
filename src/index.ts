@@ -1,6 +1,6 @@
 import 'module-alias/register';
 
-import { ConfigProvider, EventsManager, GamesManager, Logger, RoundManager } from '@shared';
+import { ConfigProvider, EventsManager, GamesManager, Logger, RankingService, RoundManager } from '@shared';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -10,7 +10,7 @@ import fs from 'fs';
 import https from 'https';
 
 import serviceAccount from './firebase.creds.json';
-import { connect, createGame, joinGame, sendAnswer, sendQuestion } from './functions';
+import { connect, createGame, finishGame, finishRound, joinGame, sendAnswer, sendQuestion } from './functions';
 import { AuthenticationConfigFactory } from './providers';
 
 dotenv.config({
@@ -47,7 +47,11 @@ const main = async () => {
     const roundManager = new RoundManager(admin.database());
     const eventsManager = EventsManager.instance;
 
+    const rankingService = new RankingService(roundManager);
+
     app.post('/create_game', createGame({ gamesManager }));
+    app.post('/finish_round', finishRound({ gamesManager, roundManager, rankingService, eventsManager }));
+    app.post('/finish_game', finishGame({ gamesManager, roundManager, rankingService, eventsManager }));
     app.post('/join_game', joinGame({ gamesManager, eventsManager }));
     app.post('/send_answer', sendAnswer({ gamesManager, roundManager }));
     app.post('/send_question', sendQuestion({ gamesManager, eventsManager, roundManager }));
