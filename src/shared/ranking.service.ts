@@ -57,23 +57,21 @@ export class RankingService {
                     this.logger.info('calculateRanking, player answered incorrectly, but game is not hardcore.', {
                         answer,
                     });
+                } else {
+                    const endGameRanking = await this.calculateEndGameRanking({
+                        userToken: answer.player_token,
+                        gameId: game.id,
+                        didPlayerLost: true,
+                        finalPosition: 0,
+                        totalPoints: currentPoints[answer.player_token] ?? 0,
+                    });
+                    ranking.endGame.push(endGameRanking);
 
-                    continue;
+                    this.logger.info('calculateRanking, player answered incorrectly, game is hardcore.', {
+                        answer,
+                        endGameRanking,
+                    });
                 }
-
-                const endGameRanking = await this.calculateEndGameRanking({
-                    userToken: answer.player_token,
-                    gameId: game.id,
-                    didPlayerLost: true,
-                    finalPosition: 0,
-                    totalPoints: currentPoints[answer.player_token] ?? 0,
-                });
-                ranking.endGame.push(endGameRanking);
-
-                this.logger.info('calculateRanking, player answered incorrectly, game is hardcore.', {
-                    answer,
-                    endGameRanking,
-                });
             }
 
             const points = this.calculatePointsForRound({
@@ -104,20 +102,23 @@ export class RankingService {
             const currentPlayerPoints = currentPoints[player.token] ?? 0;
             const pointsForThisRound = roundPoints.find((points) => points.playerToken === player.token)?.points;
             const finalPoints = currentPlayerPoints + (pointsForThisRound ?? 0);
-            const currentPosition = roundPoints.findIndex((points) => points.playerToken === player.token) + 1;
             const answeredNth = answerTimes.findIndex((answerTime) => answerTime.playerToken === player.token);
 
             ranking.endRound.push({
                 userToken: player.token,
-                wasAnswerCorrect: pointsForThisRound !== undefined ? true : null,
+                wasAnswerCorrect: pointsForThisRound === undefined ? null : !!pointsForThisRound,
                 pointsForThisRound: pointsForThisRound ?? 0,
                 totalPoints: finalPoints,
-                currentPosition,
+                currentPosition: 0,
                 answeredNth: answeredNth === -1 ? null : answeredNth + 1,
             });
         }
 
         ranking.endRound.sort((a, b) => b.totalPoints - a.totalPoints);
+
+        for (let i = 0; i < ranking.endRound.length; i++) {
+            ranking.endRound[i].currentPosition = i + 1;
+        }
 
         this.logger.info('calculateRanking, ranking calculated.', ranking);
 

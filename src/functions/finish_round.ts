@@ -107,6 +107,20 @@ const handler = async (
         });
     }
 
+    for (const player of body.current_ranking) {
+        const existingPlayer = finalRanking.find((rankingPlayer) => rankingPlayer.token === player.token);
+        if (existingPlayer) {
+            continue;
+        }
+
+        finalRanking.push({
+            token: player.token,
+            username: player.username,
+            points: player.points,
+            round_lost: player.round_lost,
+        });
+    }
+
     await Promise.all(notificationPromises);
 
     return {
