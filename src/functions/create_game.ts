@@ -1,5 +1,6 @@
-import { functionWrapper, GamesManager, Logger } from '@shared';
+import { auth, AuthLevel, functionWrapper, GamesManager, HttpError, Logger } from '@shared';
 import { randomBytes } from 'crypto';
+import { Request } from 'express';
 import { z } from 'zod';
 
 interface Dependencies {
@@ -12,8 +13,11 @@ const schema = z.object({
 
 const logger = new Logger('createGame');
 
-const handler = async (dependencies: Dependencies, body: z.infer<typeof schema>) => {
-    // Add auth
+const handler = async (dependencies: Dependencies, body: z.infer<typeof schema>, request: Request) => {
+    const { authToken } = request;
+    if (!authToken) {
+        throw new HttpError(401, 'No auth token!');
+    }
 
     const code = Math.round(Math.random() * 999_999)
         .toString()
@@ -29,7 +33,7 @@ const handler = async (dependencies: Dependencies, body: z.infer<typeof schema>)
         game_template_id: body.template_id,
         players: [],
         sign_up_blocked: false,
-        created_by: '',
+        created_by: authToken.uid,
     });
 
     logger.info('Created game', { game });
@@ -41,5 +45,5 @@ const handler = async (dependencies: Dependencies, body: z.infer<typeof schema>)
 };
 
 export const createGame = (dependencies: Dependencies) => {
-    return functionWrapper(schema, handler.bind(null, dependencies));
+    return auth(AuthLevel.Admin, functionWrapper(schema, handler.bind(null, dependencies)));
 };

@@ -1,4 +1,5 @@
-import { EventsManager, functionWrapper, GamesManager, HttpError, RoundManager } from '@shared';
+import { auth, AuthLevel, EventsManager, functionWrapper, GamesManager, HttpError, RoundManager } from '@shared';
+import { Request } from 'express';
 import { z } from 'zod';
 
 const DELAY_COMPENSATION_S = 1;
@@ -19,22 +20,17 @@ const schema = z.object({
     is_hardcore: z.boolean(),
 });
 
-const handler = async (dependencies: Dependencies, body: z.infer<typeof schema>) => {
+const handler = async (dependencies: Dependencies, body: z.infer<typeof schema>, request: Request) => {
     const timeInSeconds = body.time_in_seconds + DELAY_COMPENSATION_S;
-
-    // const authData = request.auth;
-    // if (!authData) {
-    //     throw new HttpsError('unauthenticated', 'Unauthenticated');
-    // }
 
     const game = await dependencies.gamesManager.getGameById(body.game_id);
     if (!game) {
         throw new HttpError(403, 'Game not found');
     }
 
-    // if (game.created_by !== authData.uid) {
-    //     throw new HttpError(403, 'You are not the owner of this game');
-    // }
+    if (game.created_by !== request.authToken.uid) {
+        throw new HttpError(403, 'You are not the owner of this game');
+    }
 
     const lastRound = await dependencies.roundManager.getLastRoundForGame(game.id);
     if (lastRound && !lastRound.is_finished) {
@@ -71,5 +67,5 @@ const handler = async (dependencies: Dependencies, body: z.infer<typeof schema>)
 };
 
 export const sendQuestion = (dependencies: Dependencies) => {
-    return functionWrapper(schema, handler.bind(null, dependencies));
+    return auth(AuthLevel.Admin, functionWrapper(schema, handler.bind(null, dependencies)));
 };

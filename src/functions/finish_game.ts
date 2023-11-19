@@ -1,4 +1,6 @@
 import {
+    auth,
+    AuthLevel,
     EventsManager,
     functionWrapper,
     GamesManager,
@@ -7,6 +9,7 @@ import {
     RankingService,
     RoundManager,
 } from '@shared';
+import { Request } from 'express';
 import { z } from 'zod';
 
 interface Dependencies {
@@ -32,21 +35,17 @@ interface EndGameResult {
 
 const handler = async (
     dependencies: Dependencies,
-    body: z.infer<typeof schema>
+    body: z.infer<typeof schema>,
+    request: Request
 ): Promise<{ results: EndGameResult[] }> => {
-    // const authData = request.headers['authorization']?.split(' ')[1];
-    // if (!authData) {
-    //     throw new HttpError(401, 'Unauthenticated');
-    // }
-
     const game = await dependencies.gamesManager.getGameById(body.game_id);
     if (!game) {
         throw new HttpError(404, 'Game not found');
     }
 
-    // if (game.created_by !== authData.uid) {
-    //     throw new HttpError(403, 'You are not the owner of this game');
-    // }
+    if (game.created_by !== request.authToken.uid) {
+        throw new HttpError(403, 'You are not the owner of this game');
+    }
 
     const round = await dependencies.roundManager.getLastRoundForGame(game.id);
     if (!round) {
@@ -93,5 +92,5 @@ const handler = async (
 };
 
 export const finishGame = (dependencies: Dependencies) => {
-    return functionWrapper(schema, handler.bind(null, dependencies));
+    return auth(AuthLevel.Admin, functionWrapper(schema, handler.bind(null, dependencies)));
 };

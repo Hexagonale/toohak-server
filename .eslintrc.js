@@ -26,5 +26,6 @@ module.exports = {
         'no-restricted-syntax': 'off',
         'no-continue': 'off',
         'no-await-in-loop': 'off',
+        'no-plusplus': 'off',
     },
 };
