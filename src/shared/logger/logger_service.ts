@@ -9,7 +9,11 @@ export default class LoggerService {
     private static instance: LoggerService | null;
 
     static getInstance() {
-        return LoggerService.instance ?? new LoggerService();
+        if (LoggerService.instance == null) {
+            LoggerService.instance = new LoggerService();
+        }
+
+        return LoggerService.instance!;
     }
 
     private readonly maxFileSize = 1024 * 1024;
@@ -26,7 +30,7 @@ export default class LoggerService {
         console.log(formattedMessage, ...args);
 
         if (this.logFilePath != null) {
-            const stringifiedArgs = JSON.stringify(args);
+            const stringifiedArgs = args.length === 0 ? '' : JSON.stringify(args);
             const messageForFile = `${message}\n${stringifiedArgs}`;
 
             this.writeToFile(messageForFile, this.logFilePath);

@@ -14,7 +14,6 @@ const schema = z.object({
     token: z.string().min(1),
     answer_index: z.number().int().min(0),
     was_hint_used: z.boolean().default(false),
-    timestamp: z.string().min(1),
 });
 
 const handler = async (dependencies: Dependencies, body: z.infer<typeof schema>) => {
@@ -54,7 +53,7 @@ const handler = async (dependencies: Dependencies, body: z.infer<typeof schema>)
         player_token: player.token,
         was_hint_used: body.was_hint_used,
         answer_index: body.answer_index,
-        answer_time: new Date(body.timestamp),
+        answer_time: new Date(),
     });
 
     return {};

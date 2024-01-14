@@ -1,7 +1,6 @@
 import 'module-alias/register';
 
 import { ConfigProvider, EventsManager, GamesManager, Logger, RankingService, RoundManager } from '@shared';
-import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Express } from 'express';
@@ -28,7 +27,6 @@ logger.setLogFilePath('./server.log');
 const main = async () => {
     const app: Express = express();
     app.use(express.json());
-    app.use(cookieParser());
     app.use(cors({ credentials: true, origin: true }));
     app.use(express.static('public'));
 
@@ -55,6 +53,7 @@ const main = async () => {
     app.post('/join_game', joinGame({ gamesManager, eventsManager }));
     app.post('/send_answer', sendAnswer({ gamesManager, roundManager }));
     app.post('/send_question', sendQuestion({ gamesManager, eventsManager, roundManager }));
+    // app.get('/test', testFunction({ gamesManager, roundManager, rankingService }));
 
     logger.info('Starting server...');
 
