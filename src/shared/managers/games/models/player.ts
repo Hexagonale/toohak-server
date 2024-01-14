@@ -1,4 +1,4 @@
 export interface Player {
-	username: string;
-	token: string;
+    username: string;
+    token: string;
 }

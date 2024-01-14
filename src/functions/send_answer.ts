@@ -31,12 +31,6 @@ const handler = async (dependencies: Dependencies, body: z.infer<typeof schema>)
         throw new HttpError(403, 'Round finished');
     }
 
-    // const roundFinishedAtMs = round.started_at.getTime() + round.time_in_seconds * 1000;
-    // const maxAllowedAnswerTimeMs = roundFinishedAtMs + ANSWER_LATE_ALLOWED_MS;
-    // if (roundFinishedAtMs < maxAllowedAnswerTimeMs) {
-    // throw new HttpError(403, 'Round finished');
-    // }
-
     const player = game.players?.find((player) => player.token === body.token);
     if (!player) {
         throw new HttpError(403, 'Player not found');

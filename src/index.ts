@@ -53,7 +53,6 @@ const main = async () => {
     app.post('/join_game', joinGame({ gamesManager, eventsManager }));
     app.post('/send_answer', sendAnswer({ gamesManager, roundManager }));
     app.post('/send_question', sendQuestion({ gamesManager, eventsManager, roundManager }));
-    // app.get('/test', testFunction({ gamesManager, roundManager, rankingService }));
 
     logger.info('Starting server...');
 

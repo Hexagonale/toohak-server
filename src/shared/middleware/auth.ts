@@ -48,7 +48,7 @@ export const auth = (authLevel: AuthLevel, handler: Handler) => {
 
             req.authToken = decodedToken;
 
-            handler(req, res);
+            await handler(req, res);
         } catch (error) {
             logger.info('Error verifying token', error);
 

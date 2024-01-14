@@ -60,7 +60,7 @@ export class EventsManager {
 
             this.logger.info('notifyPlayerJoined', { adminToken, data });
 
-            await this.send(
+            this.send(
                 adminToken,
                 JSON.stringify({
                     type: 'PLAYER_JOINED',
@@ -98,7 +98,7 @@ export class EventsManager {
 
             this.logger.info('notifyQuestion', { userToken, data });
 
-            await this.send(userToken, JSON.stringify({ type: 'QUESTION_SENT', data }));
+            this.send(userToken, JSON.stringify({ type: 'QUESTION_SENT', data }));
         } catch (error) {
             this.logger.error('notifyGameOver, could not send notification', { error });
         }
@@ -130,7 +130,7 @@ export class EventsManager {
 
             this.logger.info('notifyRoundFinished', { userToken, data });
 
-            await this.send(userToken, JSON.stringify({ type: 'ROUND_FINISHED', data }));
+            this.send(userToken, JSON.stringify({ type: 'ROUND_FINISHED', data }));
         } catch (error) {
             this.logger.error('notifyGameOver, could not send notification', { error });
         }
@@ -165,7 +165,7 @@ export class EventsManager {
 
             this.logger.info('notifyGameOver', { userToken, data });
 
-            await this.send(
+            this.send(
                 userToken,
                 JSON.stringify({
                     type: 'GAME_OVER',
