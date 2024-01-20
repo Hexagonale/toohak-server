@@ -61,7 +61,7 @@ const main = async () => {
         cert: certificate,
     };
 
-    const server = https.createServer(serverSettings, app).listen(config.port, '146.59.77.211', () => {
+    const server = https.createServer(serverSettings, app).listen(config.port, () => {
         logger.info(`Server listening on port ${config.port}`);
     });
 
