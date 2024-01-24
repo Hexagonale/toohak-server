@@ -24,20 +24,7 @@ const schema = z.object({
     current_ranking: z.array(rankingPlayer),
 });
 
-interface EndGameResult {
-    player_token: string;
-    player_username: string;
-    points: number;
-    questions_answered: number;
-    questions_answered_correctly: number;
-    average_answer_time: number;
-}
-
-const handler = async (
-    dependencies: Dependencies,
-    body: z.infer<typeof schema>,
-    request: Request
-): Promise<{ results: EndGameResult[] }> => {
+const handler = async (dependencies: Dependencies, body: z.infer<typeof schema>, request: Request) => {
     const game = await dependencies.gamesManager.getGameById(body.game_id);
     if (!game) {
         throw new HttpError(404, 'Game not found');
@@ -58,8 +45,6 @@ const handler = async (
 
     body.current_ranking.sort((a, b) => b.points - a.points);
 
-    const results: EndGameResult[] = [];
-
     for (const player of game.players ?? []) {
         const indexInRanking = body.current_ranking.findIndex((rankingPlayer) => rankingPlayer.token === player.token);
         const currentPoints = body.current_ranking[indexInRanking].points;
@@ -72,23 +57,10 @@ const handler = async (
             finalPosition: indexInRanking + 1,
         });
 
-        results.push({
-            player_token: player.token,
-            player_username: player.username,
-            points: ranking.totalPoints,
-            questions_answered: ranking.questionsAnswered,
-            questions_answered_correctly: ranking.questionsAnsweredCorrectly,
-            average_answer_time: ranking.averageAnswerTime,
-        });
-
         dependencies.eventsManager.notifyGameOver(ranking);
     }
 
-    results.sort((a, b) => b.points - a.points);
-
-    return {
-        results,
-    };
+    return {};
 };
 
 export const finishGame = (dependencies: Dependencies) => {
