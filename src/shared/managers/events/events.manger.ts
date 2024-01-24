@@ -60,7 +60,7 @@ export class EventsManager {
 
             this.logger.info('notifyPlayerJoined', { adminToken, data });
 
-            this.send(
+            await this.send(
                 adminToken,
                 JSON.stringify({
                     type: 'PLAYER_JOINED',
@@ -98,7 +98,7 @@ export class EventsManager {
 
             this.logger.info('notifyQuestion', { userToken, data });
 
-            this.send(userToken, JSON.stringify({ type: 'QUESTION_SENT', data }));
+            await this.send(userToken, JSON.stringify({ type: 'QUESTION_SENT', data }));
         } catch (error) {
             this.logger.error('notifyGameOver, could not send notification', { error });
         }

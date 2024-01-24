@@ -8,6 +8,7 @@ export class ConfigProvider<T> {
     private config?: T;
 
     public async init(): Promise<T | null> {
+        // process.env is a dictionary of environment variables, it is provided by Node.js
         const config = this.configFactory.build(process.env);
         if (!config) {
             this.logger.error('init, cannot build config');
