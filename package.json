@@ -2,10 +2,10 @@
     "name": "messenger-backend",
     "license": "MIT",
     "scripts": {
-        "compile": "tsc",
-        "compile:watch": "tsc --watch",
-        "start-server": "node build/index.js",
-        "start-server:watch": "nodemon build/index.js",
+        "build": "tsc",
+        "build:watch": "tsc --watch",
+        "start": "node build/index.js",
+        "start:dev": "nodemon src/index.ts",
         "lint": "eslint --ext .ts ."
     },
     "sideEffects": false,
@@ -14,7 +14,6 @@
         "body-parser": "^1.20.2",
         "chalk": "^4.1.2",
         "cors": "^2.8.5",
-        "dotenv": "^16.3.1",
         "express": "^4.18.2",
         "firebase-admin": "^11.11.0",
         "module-alias": "^2.2.3",
@@ -38,7 +37,8 @@
         "eslint-plugin-import": "^2.25.3",
         "eslint-plugin-simple-import-sort": "^10.0.0",
         "nodemon": "^3.0.1",
-        "prettier": "^3.0.3"
+        "prettier": "^3.0.3",
+        "ts-node": "^10.9.2"
     },
     "_moduleAliases": {
         "@shared": "build/shared"

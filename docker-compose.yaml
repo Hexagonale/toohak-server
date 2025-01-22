@@ -1,0 +1,24 @@
+name: toohak
+services:
+    service:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        develop:
+            watch:
+                - action: sync
+                  path: src
+                  target: /usr/src/app/src
+                - action: rebuild
+                  path: package.json
+                  target: /usr/src/app/src/package.json
+        command: npm run start:dev
+        container_name: toohak
+        mem_limit: 256M
+        cpu_count: 1
+        networks:
+            - web
+
+networks:
+    web:
+        external: true

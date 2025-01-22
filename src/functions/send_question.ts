@@ -25,7 +25,7 @@ const handler = async (dependencies: Dependencies, body: z.infer<typeof schema>,
 
     const game = await dependencies.gamesManager.getGameById(body.game_id);
     if (!game) {
-        throw new HttpError(403, 'Game not found');
+        throw new HttpError(404, 'Game not found');
     }
 
     if (game.created_by !== request.authToken.uid) {
